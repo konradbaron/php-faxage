@@ -4,10 +4,7 @@
  */
 
 class Faxage {
-	/**
-     * The company_id is assigned to you once you create an account with faxage
-     */
-
+	
 	private $faxage_api_url = "https://www.faxage.com/httpsfax.php";
 	private $user_name;
 	private $company_id;
@@ -15,6 +12,7 @@ class Faxage {
 	private $fax_number;
 	private $fax_content;
 	private $recipient_name;
+	private $job_id;
 	
 	
     public function __construct($user_name, $company_id, $password)
@@ -42,22 +40,57 @@ class Faxage {
 		$this->recipient_name = $recipient_name;
 		return $this;
 	}
-
+	
+	public function set_job_id($job_id){
+        if (!is_numeric($job_id)) throw new Exception('Job ID must be numeric only.');;
+		$this->job_id = $job_id;
+		return $this;
+	}
     /**
-     * On success returns a job ID variable from faxage, which can later be used to
-     * to track status of your fax
-     */
+     * On success returns unique fax ID which can be later used to track status of this specific send
+     *
+    */
 	public function send_fax() {
 		$fields = array(
-			'username'=>$this->user_name,
-			'company'=>$this->company_id,
-			'password'=>$this->password,
 			'faxno'=>$this->fax_number,
 			'recipname'=>$this->recipient_name,
 			'faxfiledata[0]'=>$this->fax_content,
 			'operation'=>'sendfax',
 			'faxfilenames[0]'=>$this->fax_number.".html",
 		);
+		
+		$response = $this->curl($fields);
+		if (strstr(strtolower($response), 'jobid:')) {
+			$job_id_arr = explode(":", $response);
+			return trim($job_id_arr[1]);
+		} else {
+			throw new Exception("Faxage returns error: ".$response.".");
+		}
+	}
+	
+	
+    /**
+     * On success returns Tab delimited string jobid | commid | destname | shortstatus | longstatus | sendtime
+     * | completetime | xmittime
+     *
+    */
+	public function get_status() {
+		$fields = array(
+			'jobid'=>$this->job_id,
+			'operation'=>'status',
+		);
+		return $this->curl($fields);
+	}
+	
+	
+	
+	
+	public function curl($parameters) {
+		$fields = array_merge($parameters,array(
+			'username'=>$this->user_name,
+			'company'=>$this->company_id,
+			'password'=>$this->password,
+		));
 		
 		$ch = curl_init();
 		curl_setopt($ch,CURLOPT_URL, $this->faxage_api_url);
@@ -74,12 +107,6 @@ class Faxage {
 			throw new Exception("Failed retrieving  '" . $this->faxage_api_url . "' because of ' " . $error . "'.");
 		}
 		
-		
-		if (strstr(strtolower($result), 'jobid:')) {
-			$job_id_arr = explode(":", $result);
-			return trim($job_id_arr[1]);
-		} else {
-			throw new Exception("Faxage returns error: ".$result.".");
-		}
+		return $result;
 	}
 }
