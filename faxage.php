@@ -42,7 +42,7 @@ class Faxage {
 	}
 	
 	public function set_job_id($job_id){
-        if (!is_numeric($job_id)) throw new Exception('Job ID must be numeric only.');;
+        if (!is_numeric($job_id)) throw new Exception('Job ID must be numeric only.');
 		$this->job_id = $job_id;
 		return $this;
 	}
