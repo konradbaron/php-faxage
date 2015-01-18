@@ -17,7 +17,7 @@ class Faxage {
 	
     public function __construct($user_name, $company_id, $password)
     {
-        if (!is_numeric($company_id)) throw new Exception('Company ID must be numeric only.');;
+        if (!is_numeric($company_id)) throw new Exception('Company ID must be numeric only.');
 		
         $this->user_name = $user_name;
         $this->company_id = $company_id;
