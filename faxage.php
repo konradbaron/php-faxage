@@ -15,14 +15,14 @@ class Faxage {
 	private $job_id;
 	
 	
-    public function __construct($user_name, $company_id, $password)
-    {
-        if (!is_numeric($company_id)) throw new Exception('Company ID must be numeric only.');
+	public function __construct($user_name, $company_id, $password)
+	{
+		if (!is_numeric($company_id)) throw new Exception('Company ID must be numeric only.');
 		
-        $this->user_name = $user_name;
-        $this->company_id = $company_id;
-        $this->password = $password;
-    }
+		$this->user_name = $user_name;
+		$this->company_id = $company_id;
+		$this->password = $password;
+	}
 	
 	public function set_fax_number($fax_number){
 		$this->fax_number = preg_replace('/[^0-9]/', '',$fax_number);
@@ -46,10 +46,10 @@ class Faxage {
 		$this->job_id = $job_id;
 		return $this;
 	}
-    /**
-     * On success returns unique fax ID which can be later used to track status of this specific send
-     *
-    */
+	/**
+	* On success returns unique fax ID which can be later used to track status of this specific send
+	*
+	*/
 	public function send_fax() {
 		$fields = array(
 			'faxno'=>$this->fax_number,
@@ -69,11 +69,11 @@ class Faxage {
 	}
 	
 	
-    /**
-     * On success returns Tab delimited string jobid | commid | destname | shortstatus | longstatus | sendtime
-     * | completetime | xmittime
-     *
-    */
+	/**
+	* On success returns Tab delimited string jobid | commid | destname | shortstatus | longstatus | sendtime
+	* | completetime | xmittime
+	*
+	*/
 	public function get_status() {
 		$fields = array(
 			'jobid'=>$this->job_id,
