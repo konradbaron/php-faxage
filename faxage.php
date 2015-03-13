@@ -31,6 +31,7 @@ class Faxage {
 	}
 	
 	public function set_fax_content($fax_content){
+		if (!$fax_content) throw new Exception('Fax Content is required.');
 		$this->fax_content = base64_encode($fax_content);
 		return $this;
 	}
