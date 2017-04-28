@@ -6,12 +6,16 @@ You will need a Faxage account before you can use the class, as it requires a va
 The API allows for sending content in multiple formats. But currently this class only sends the content in HTML format.
 
 ###Send HTML formatted fax
+```php
     $faxage = new Faxage('YOUR_USERNAME','YOUR_COMPANY_ID','YOUR_PASSWORD');
     $faxage->set_fax_number('555-555-5555');
     $faxage->set_fax_content('<h1>Hello!</h1>');
     $faxage->set_recipient_name('Test McTester');
     $faxage->send_fax();
+```
 ###Get status of sent fax
+```php
     $faxage = new Faxage('YOUR_USERNAME','YOUR_COMPANY_ID','YOUR_PASSWORD');
     $fax->set_job_id('YOUR_JOB_ID');
     $fax->get_status();
+```
